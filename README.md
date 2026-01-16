@@ -1,20 +1,27 @@
-Local Email RAG System (Retrieval-Augmented Generation)
-Overview
+# Local Email RAG System (Retrieval-Augmented Generation)
+
+## Overview
 
 This project implements a local Retrieval-Augmented Generation (RAG) system that allows users to query and summarize email content using natural language. The system embeds email data into a vector database and retrieves relevant context before generating responses using a locally hosted Large Language Model (LLM).
 
 The solution emphasizes data privacy, modular design, and real-world applicability, and can operate entirely offline.
 
-Key Capabilities:
- Semantic search over email content (meaning-based, not keyword-based)
- Retrieval-Augmented Generation (RAG) for grounded LLM responses
- Fully local inference (no cloud LLMs or data sharing)
- Multi-user data isolation via metadata filtering
- Mock email support for deterministic demos and testing
- Optional Gmail API integration for real inbox data
+---
 
+## Key Capabilities
 
-High-Level Architecture:
+- Semantic search over email content (meaning-based, not keyword-based)
+- Retrieval-Augmented Generation (RAG) for grounded LLM responses
+- Fully local inference (no cloud LLMs or data sharing)
+- Multi-user data isolation via metadata filtering
+- Mock email support for deterministic demos and testing
+- Optional Gmail API integration for real inbox data
+
+---
+
+## High-Level Architecture
+
+```
 User Query
    ↓
 Vector Retrieval (ChromaDB)
@@ -24,113 +31,143 @@ Relevant Emails
 Local LLM (Ollama)
    ↓
 Grounded Answer + Source Emails
+```
 
+---
 
-Project Structure:
+## Project Structure
+
+```
 email_rag_project/
 ├── main.py              # Application entry point
 ├── processor.py         # RAG logic, embeddings, and vector database
 ├── gmail_lib.py         # Mock data / Gmail API abstraction
 ├── requirements.txt     # Python dependencies
 └── README.md            # Project documentation
+```
 
+---
 
-File Descriptions:
-main.py:
-    1. Serves as the execution entry point.
-    2. Orchestrates the full pipeline:
-    3. Fetch emails
-    4. Index them into a vector database
-    5. Execute a natural-language query
-    6. Display the LLM response and source documents
+## File Descriptions
 
+### main.py
+1. Serves as the execution entry point.
+2. Orchestrates the full pipeline:
+   - Fetch emails
+   - Index them into a vector database
+   - Execute a natural-language query
+   - Display the LLM response and source documents
 
-processor.py:
-    1. Contains the EmailRAG class.
-    2. Responsibilities:
-        i. Generate embeddings using a sentence-transformer model
-       ii. Persist vectors in a local Chroma database
-      iii. Retrieve user-specific documents
-       iv. Invoke a local LLM using Ollama
-    3. Enforces user-level isolation through metadata filtering.
+### processor.py
+1. Contains the `EmailRAG` class.
+2. Responsibilities:
+   - Generate embeddings using a sentence-transformer model
+   - Persist vectors in a local Chroma database
+   - Retrieve user-specific documents
+   - Invoke a local LLM using Ollama
+3. Enforces user-level isolation through metadata filtering.
 
+### gmail_lib.py
+1. Abstracts the email data source.
+2. Supports:
+   - Mock email data (default, for demos/testing)
+   - Gmail API integration (OAuth-based)
+3. Designed for easy extensibility to other email providers.
 
-gmail_lib.py:
-    1. Abstracts the email data source.
-    2. Supports:
-        i. Mock email data (default, for demos/testing)
-       ii. Gmail API integration (OAuth-based)
-    3. Designed for easy extensibility to other email providers.
+### requirements.txt
+1. Defines all dependencies required to run the project, including:
+   - LangChain (RAG framework)
+   - HuggingFace sentence-transformers
+   - ChromaDB (vector storage)
+   - Ollama (local LLM runtime)
 
+---
 
-requirements.txt:
-    1. Defines all dependencies required to run the project, including:
-    2. LangChain (RAG framework)
-    3. HuggingFace sentence-transformers
-    4. ChromaDB (vector storage)
-    5. Ollama (local LLM runtime)
+## Technologies Used
 
+1. Python
+2. LangChain
+3. Sentence Transformers
+4. ChromaDB
+5. Ollama
+6. Gmail API (optional)
 
-Technologies Used:
-    1. Python
-    2. LangChain
-    3. Sentence Transformers
-    4. ChromaDB
-    5. Ollama
-    6. Gmail API (optional)
+---
 
+## How It Works
 
-How It Works:
-1. Email Ingestion:
+### 1. Email Ingestion
 Emails are fetched (mock or real). Each email is converted into a structured document with metadata.
 
-2. Vector Indexing:
-Emails are embedded into numerical vectors. Vectors are stored persistently in ChromaDB. Metadata includes user_id, enabling safe multi-user support.
+### 2. Vector Indexing
+Emails are embedded into numerical vectors. Vectors are stored persistently in ChromaDB. Metadata includes `user_id`, enabling safe multi-user support.
 
-3. Query & Generation:
+### 3. Query & Generation
 A natural-language question is submitted. Relevant emails are retrieved semantically. Retrieved content is passed to the LLM. The model generates an answer grounded in email context. Source emails are returned for transparency.
 
+---
 
-Example Query
+## Example Query
+
+```text
 "Summarize the emails regarding the project launch."
+```
 
+### Output
 
-Output:
-    1. A concise summary generated by the LLM.
-    2. A list of email subjects used as sources.
+1. A concise summary generated by the LLM.
+2. A list of email subjects used as sources.
 
+---
 
-Why This Project Matters:
+## Why This Project Matters
+
 This project demonstrates:
 
 1. Practical application of RAG architectures. Understanding of LLM grounding and hallucination prevention. Focus on data privacy and local-first AI. Clean separation of concerns and extensible design. End-to-end AI system development (not just model usage)
 
 2. It is representative of real-world enterprise use cases such as:
-Internal knowledge assistants. Email summarization tools. Secure document search systems. AI-powered productivity workflows
+   - Internal knowledge assistants
+   - Email summarization tools
+   - Secure document search systems
+   - AI-powered productivity workflows
 
+---
 
-Setup Instructions:
-Prerequisites:
-    1. Python 3.10+
-    2. Ollama installed and running
-    3. A local LLM pulled (e.g., mistral)
+## Setup Instructions
 
-Install Dependencies:
+### Prerequisites
+
+1. Python 3.10+
+2. Ollama installed and running
+3. A local LLM pulled (e.g., mistral)
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
-Run the Demo:
+### Run the Demo
+
+```bash
 python main.py
+```
 
+---
 
-Notes:
-    1. The project defaults to mock email data for easy testing.
-    2. Gmail API credentials are included for optional real inbox integration.
-    3. All data processing and inference occur locally.
+## Notes
 
+1. The project defaults to mock email data for easy testing.
+2. Gmail API credentials are included for optional real inbox integration.
+3. All data processing and inference occur locally.
 
-Future Enhancements:
-    1. Email chunking for long messages
-    2. Role-based access control
-    3. UI or API layer
-    4. Support for additional vector databases
-    5. Streaming responses
+---
+
+## Future Enhancements
+
+1. Email chunking for long messages
+2. Role-based access control
+3. UI or API layer
+4. Support for additional vector databases
+5. Streaming responses
