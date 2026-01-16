@@ -1,0 +1,11 @@
+✅ What the project actually does (quick recap)
+
+Your project is a Local Email RAG (Retrieval-Augmented Generation) system:
+
+Fetches emails from Gmail using Google’s Gmail API (gmail_lib.py)
+
+Indexes emails locally into a vector database (Chroma) using embeddings
+
+Runs a local LLM (Mistral via Ollama) to answer questions about your emails
+
+Supports multi-user isolation via metadata filtering (user_id)

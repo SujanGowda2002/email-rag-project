@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+env/
+
+# Vector DB
+chroma_db/
+
+# Secrets
+credentials.json
+token.json
+
+# OS
+.DS_Store
+
+# Large installers / binaries
+*.exe
