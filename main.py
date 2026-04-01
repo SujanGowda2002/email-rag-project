@@ -1,6 +1,12 @@
 # main.py
 from gmail_lib import fetch_emails_mock  # <- switch to the mock function
 from processor import EmailRAG
+import os
+
+#import warning exemptions
+import warnings
+warnings.filterwarnings("ignore")
+
 
 def run_demo():
     print("--- Initializing Local Email RAG ---")

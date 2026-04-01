@@ -51,6 +51,7 @@ email_rag_project/
 ## File Descriptions
 
 ### main.py
+
 1. Serves as the execution entry point.
 2. Orchestrates the full pipeline:
    - Fetch emails
@@ -59,6 +60,7 @@ email_rag_project/
    - Display the LLM response and source documents
 
 ### processor.py
+
 1. Contains the `EmailRAG` class.
 2. Responsibilities:
    - Generate embeddings using a sentence-transformer model
@@ -68,6 +70,7 @@ email_rag_project/
 3. Enforces user-level isolation through metadata filtering.
 
 ### gmail_lib.py
+
 1. Abstracts the email data source.
 2. Supports:
    - Mock email data (default, for demos/testing)
@@ -75,6 +78,7 @@ email_rag_project/
 3. Designed for easy extensibility to other email providers.
 
 ### requirements.txt
+
 1. Defines all dependencies required to run the project, including:
    - LangChain (RAG framework)
    - HuggingFace sentence-transformers
@@ -97,12 +101,15 @@ email_rag_project/
 ## How It Works
 
 ### 1. Email Ingestion
+
 Emails are fetched (mock or real). Each email is converted into a structured document with metadata.
 
 ### 2. Vector Indexing
+
 Emails are embedded into numerical vectors. Vectors are stored persistently in ChromaDB. Metadata includes `user_id`, enabling safe multi-user support.
 
 ### 3. Query & Generation
+
 A natural-language question is submitted. Relevant emails are retrieved semantically. Retrieved content is passed to the LLM. The model generates an answer grounded in email context. Source emails are returned for transparency.
 
 ---
@@ -125,8 +132,8 @@ A natural-language question is submitted. Relevant emails are retrieved semantic
 This project demonstrates:
 
 1. Practical application of RAG architectures. Understanding of LLM grounding and hallucination prevention. Focus on data privacy and local-first AI. Clean separation of concerns and extensible design. End-to-end AI system development (not just model usage)
-
 2. It is representative of real-world enterprise use cases such as:
+
    - Internal knowledge assistants
    - Email summarization tools
    - Secure document search systems
@@ -151,6 +158,10 @@ pip install -r requirements.txt
 ### Run the Demo
 
 ```bash
+cd path\to\your\project\directory
+python -n venv .venv
+.venv\Scripts\activate.bat
+ollama pull mistral
 python main.py
 ```
 
