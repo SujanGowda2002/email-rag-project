@@ -15,11 +15,11 @@ def run_demo():
     raw_emails = fetch_emails(max_results=10)
     
     # 2. Setup RAG for a specific user
-    user_a_rag = EmailRAG(user_id="user_123")
+    user_a_rag = EmailRAG(user_id="SSG")
     user_a_rag.ingest_emails(raw_emails)
     
     # 3. Query
-    query = "Who sent me the most recent email and what was it about?."
+    query = "Who sent me the most recent email and what was it about?"
     print(f"\nUser Query: {query}")
     
     result = user_a_rag.ask(query)

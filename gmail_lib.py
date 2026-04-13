@@ -23,7 +23,6 @@ def get_gmail_service():
     return build('gmail', 'v1', credentials=creds)
 
 def fetch_emails(max_results=10):
-    """The REAL function that talks to Google"""
     service = get_gmail_service() 
     results = service.users().messages().list(userId='me', maxResults=max_results).execute()
     messages = results.get('messages', [])
@@ -32,12 +31,16 @@ def fetch_emails(max_results=10):
     for msg in messages:
         m = service.users().messages().get(userId='me', id=msg['id']).execute()
         headers = m.get('payload', {}).get('headers', [])
+        
+        # --- ADDED: Grab the Date header ---
         subject = next((h['value'] for h in headers if h['name'] == 'Subject'), 'No Subject')
+        date = next((h['value'] for h in headers if h['name'] == 'Date'), 'Unknown Date')
         snippet = m.get('snippet', '')
         
         email_data.append({
             "id": msg['id'],
             "subject": subject,
+            "date": date, # Pass the date along
             "content": snippet
         })
     return email_data
