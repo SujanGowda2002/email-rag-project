@@ -1,5 +1,5 @@
 # main.py
-from gmail_lib import fetch_emails_mock  # <- switch to the mock function
+from gmail_lib import fetch_emails  # <- switch to the mock function
 from processor import EmailRAG
 import os
 
@@ -12,14 +12,14 @@ def run_demo():
     print("--- Initializing Local Email RAG ---")
     
     # 1. Fetch mock emails
-    raw_emails = fetch_emails_mock(max_results=10)
+    raw_emails = fetch_emails(max_results=10)
     
     # 2. Setup RAG for a specific user
     user_a_rag = EmailRAG(user_id="user_123")
     user_a_rag.ingest_emails(raw_emails)
     
     # 3. Query
-    query = "Summarize the emails regarding the project launch."
+    query = "Who sent me the most recent email and what was it about?."
     print(f"\nUser Query: {query}")
     
     result = user_a_rag.ask(query)
