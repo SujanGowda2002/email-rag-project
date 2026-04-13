@@ -3,19 +3,22 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.llms import Ollama 
 from langchain_core.documents import Document 
 from langchain_classic.chains import RetrievalQA
-from langchain_core.prompts import PromptTemplate
 import shutil
 import os
 
 class EmailRAG: 
     def __init__(self, user_id="SSG"): 
         self.user_id = user_id 
+        # Local Embedding Model
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2") 
         
+        # --- THE FIX: RESET FOR DEMO ---
+        # If you want to start fresh every time you run the script:
         if os.path.exists("./chroma_db"):
             shutil.rmtree("./chroma_db")
             print("--- Database Reset: Previous session data cleared ---")
 
+        # Local Vector DB 
         self.vector_db = Chroma( 
             persist_directory="./chroma_db", 
             embedding_function=self.embeddings, 
@@ -25,39 +28,31 @@ class EmailRAG:
     def ingest_emails(self, email_list): 
         docs = [] 
         for em in email_list: 
+            # Metadata filtering for Multi-User Support 
             metadata = {
                 "user_id": self.user_id, 
                 "subject": em['subject'], 
-                "id": em['id'],
-                "date": em.get('date', 'Unknown') # Store date in metadata
+                "id": em['id']
             } 
-            # --- THE FIX: Include Date in the actual text ---
             doc = Document(
-                page_content=f"Date: {metadata['date']}\nSubject: {em['subject']}\nContent: {em['content']}", 
+                page_content=f"Subject: {em['subject']}\nContent: {em['content']}", 
                 metadata=metadata
             ) 
             docs.append(doc) 
         
+        # --- PERFORMANCE FIX ---
+        # Move this OUTSIDE the loop. 
+        # Before, you were re-adding the entire 'docs' list for every single email!
         if docs:
             self.vector_db.add_documents(docs) 
             print(f"Successfully indexed {len(docs)} emails for {self.user_id}") 
             
     def ask(self, question): 
+        # Local LLM via Ollama 
         llm = Ollama(model="mistral") 
         
-        # Custom Prompt to force the LLM to look at the Dates
-        template = """You are a personal assistant. Use the following emails to answer the user's question. 
-        The emails include dates; if there are conflicting updates, prioritize the information in the most recent email.
-        
-        Context: {context}
-        Question: {question}
-        
-        Answer:"""
-        
-        PROMPT = PromptTemplate(
-            template=template, input_variables=["context", "question"]
-        )
-
+        # Retrieval with Metadata filtering
+        # Increased 'k' to 5 so it sees more context if you have multiple related emails
         retriever = self.vector_db.as_retriever( 
             search_kwargs={'filter': {'user_id': self.user_id}, 'k': 5} 
         ) 
@@ -66,8 +61,7 @@ class EmailRAG:
             llm=llm, 
             chain_type="stuff", 
             retriever=retriever, 
-            return_source_documents=True,
-            chain_type_kwargs={"prompt": PROMPT} # Pass the custom prompt here
+            return_source_documents=True 
         ) 
         
         response = qa_chain.invoke({"query": question}) 
