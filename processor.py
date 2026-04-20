@@ -63,7 +63,7 @@ class EmailRAG:
         """
         Ask a question over the indexed emails using retrieval-augmented generation.
         """
-        llm = Ollama(model="mistral")
+        llm = Ollama(model="tinyllama")
 
         retriever = self.vector_db.as_retriever(
             search_kwargs={

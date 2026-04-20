@@ -27,7 +27,7 @@ def run_demo():
     user_a_rag.ingest_emails(raw_emails)
 
     # Step 4: Ask a question about the emails
-    query = "What was the subject of the recent email sent from Linkedin to me?"
+    query = "What was the subject of the recent email sent from McAfee to me?"
     print(f"\nUser Query: {query}")
 
     result = user_a_rag.ask(query)
