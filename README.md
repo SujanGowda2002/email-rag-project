@@ -28,7 +28,7 @@ Vector Retrieval (ChromaDB)
    ↓
 Relevant Emails
    ↓
-Local LLM (Ollama)
+Local LLM (Ollama/tinyllama)
    ↓
 Grounded Answer + Source Emails
 ```
@@ -66,7 +66,7 @@ email_rag_project/
    - Generate embeddings using a sentence-transformer model
    - Persist vectors in a local Chroma database
    - Retrieve user-specific documents
-   - Invoke a local LLM using Ollama
+   - Invoke a local LLM using Ollama/tinyllama
 3. Enforces user-level isolation through metadata filtering.
 
 ### gmail_lib.py
@@ -83,7 +83,7 @@ email_rag_project/
    - LangChain (RAG framework)
    - HuggingFace sentence-transformers
    - ChromaDB (vector storage)
-   - Ollama (local LLM runtime)
+   - Ollama/tinyllama (local LLM runtime)
 
 ---
 
@@ -93,7 +93,7 @@ email_rag_project/
 2. LangChain
 3. Sentence Transformers
 4. ChromaDB
-5. Ollama
+5. Ollama/tinyllama
 6. Gmail API (optional)
 
 ---
@@ -146,7 +146,7 @@ This project demonstrates:
 ### Prerequisites
 
 1. Python 3.10+
-2. Ollama installed and running
+2. Ollama/tinyllama installed and running
 3. A local LLM pulled (e.g., mistral)
 
 ### Install Dependencies
